@@ -323,7 +323,8 @@ const Index = () => {
                   </div>
                   <div>
                     <div className="text-sm text-gray-400">Telegram</div>
-                    <div className="text-lg font-medium">@sokolov_materials</div>
+                    <div className="text-lg font-medium">@NikitaBBC
+</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
