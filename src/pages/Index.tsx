@@ -11,6 +11,8 @@ const Index = () => {
     phone: "",
     message: ""
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   const services = [
     {
@@ -39,17 +41,20 @@ const Index = () => {
     {
       title: "ЖК «Премьер Палас»",
       area: "240 м²",
-      materials: "Итальянская керамика, немецкий ламинат"
+      materials: "Итальянская керамика, немецкий ламинат",
+      image: "https://cdn.poehali.dev/projects/f7d0e354-f45f-4790-a87e-4d519bef408d/files/e6eada04-31d7-43a9-926d-eab1cf20d91b.jpg"
     },
     {
       title: "Офис компании «Альфа»",
       area: "380 м²",
-      materials: "Кварцвинил, декоративная штукатурка"
+      materials: "Кварцвинил, декоративная штукатурка",
+      image: "https://cdn.poehali.dev/projects/f7d0e354-f45f-4790-a87e-4d519bef408d/files/b153bccd-a8bd-405b-9a38-a270d783fe12.jpg"
     },
     {
       title: "Частный дом в КП «Сосны»",
       area: "520 м²",
-      materials: "Паркетная доска, натуральный камень"
+      materials: "Паркетная доска, натуральный камень",
+      image: "https://cdn.poehali.dev/projects/f7d0e354-f45f-4790-a87e-4d519bef408d/files/91cd2fbf-bc62-47ed-845b-a14e4ca055ef.jpg"
     }
   ];
 
@@ -71,9 +76,34 @@ const Index = () => {
     }
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+    
+    try {
+      const response = await fetch('https://functions.poehali.dev/9cd3766d-ebb6-4159-ac34-eac6989345e9', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok && data.success) {
+        setSubmitStatus('success');
+        setFormData({ name: '', phone: '', message: '' });
+      } else {
+        setSubmitStatus('error');
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -211,8 +241,12 @@ const Index = () => {
           <div className="grid md:grid-cols-3 gap-8">
             {portfolio.map((project, index) => (
               <Card key={index} className="hover-scale overflow-hidden">
-                <div className="h-48 bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-                  <Icon name="Building2" size={64} className="text-white/30" />
+                <div className="h-48 overflow-hidden">
+                  <img 
+                    src={project.image} 
+                    alt={project.title}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <CardContent className="p-6 space-y-3">
                   <h3 className="font-bold text-xl">{project.title}</h3>
@@ -312,6 +346,8 @@ const Index = () => {
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
+                      required
+                      disabled={isSubmitting}
                     />
                   </div>
                   <div>
@@ -320,6 +356,8 @@ const Index = () => {
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
+                      required
+                      disabled={isSubmitting}
                     />
                   </div>
                   <div>
@@ -328,11 +366,36 @@ const Index = () => {
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 min-h-32"
+                      required
+                      disabled={isSubmitting}
                     />
                   </div>
-                  <Button type="submit" className="w-full bg-primary hover:bg-primary/90">
-                    <Icon name="Send" size={20} className="mr-2" />
-                    Отправить
+                  {submitStatus === 'success' && (
+                    <div className="p-4 bg-green-500/20 border border-green-500/50 rounded-lg text-white text-sm">
+                      ✓ Сообщение отправлено! Свяжемся с вами в ближайшее время.
+                    </div>
+                  )}
+                  {submitStatus === 'error' && (
+                    <div className="p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-white text-sm">
+                      Ошибка отправки. Попробуйте позже или свяжитесь по телефону.
+                    </div>
+                  )}
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-primary hover:bg-primary/90"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Icon name="Loader2" size={20} className="mr-2 animate-spin" />
+                        Отправка...
+                      </>
+                    ) : (
+                      <>
+                        <Icon name="Send" size={20} className="mr-2" />
+                        Отправить
+                      </>
+                    )}
                   </Button>
                 </form>
               </CardContent>
