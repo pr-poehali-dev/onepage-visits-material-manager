@@ -115,9 +115,8 @@ const Index = () => {
               <div className="inline-block px-4 py-2 bg-primary/20 rounded-full text-sm font-medium">
                 Менеджер по чистовым материалам
               </div>
-              <h1 className="text-5xl md:text-6xl font-bold leading-tight">
-                Алексей Соколов
-              </h1>
+              <h1 className="text-5xl md:text-6xl font-bold leading-tight">Никита Фролов
+</h1>
               <p className="text-xl text-gray-300 leading-relaxed">
                 Профессиональный подбор и поставка отделочных материалов для вашего проекта. Более 8 лет опыта работы с премиальными брендами.
               </p>
