@@ -408,7 +408,7 @@ const Index = () => {
 
       <footer className="bg-[#1A1F2C] text-gray-400 py-8 px-6">
         <div className="container mx-auto max-w-6xl text-center">
-          <p>© 2024 Алексей Соколов. Менеджер по чистовым материалам</p>
+          <p>© 2024 Никита Фролов. Менеджер по чистовым материалам</p>
         </div>
       </footer>
     </div>
