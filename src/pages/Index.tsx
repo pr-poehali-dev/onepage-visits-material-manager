@@ -314,7 +314,7 @@ const Index = () => {
                   </div>
                   <div>
                     <div className="text-sm text-gray-400">Email</div>
-                    <div className="text-lg font-medium">a.sokolov@example.com</div>
+                    <div className="text-lg font-medium">fnafnafna@yandex.ru</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
